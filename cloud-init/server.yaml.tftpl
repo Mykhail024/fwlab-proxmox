@@ -1,0 +1,38 @@
+#cloud-config
+hostname: fw-server
+timezone: UTC
+users:
+  - name: lab
+    groups: [sudo]
+    shell: /bin/bash
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    ssh_authorized_keys:
+      - ${ssh_public_key}
+package_update: true
+packages:
+  - qemu-guest-agent
+  - nginx
+  - iptables
+  - iptables-persistent
+  - netcat-openbsd
+  - nmap
+  - tcpdump
+  - curl
+write_files:
+  - path: /opt/test8080/index.html
+    content: "test service on 8080"
+  - path: /etc/systemd/system/test8080.service
+    content: |
+      [Unit]
+      Description=Test HTTP service on 8080
+      After=network.target
+      [Service]
+      ExecStart=/usr/bin/python3 -m http.server 8080 --directory /opt/test8080
+      Restart=always
+      [Install]
+      WantedBy=multi-user.target
+runcmd:
+  - systemctl enable --now qemu-guest-agent
+  - systemctl enable --now nginx
+  - systemctl daemon-reload
+  - systemctl enable --now test8080.service

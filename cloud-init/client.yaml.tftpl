@@ -1,0 +1,20 @@
+#cloud-config
+hostname: fw-client
+timezone: UTC
+users:
+  - name: lab
+    groups: [sudo]
+    shell: /bin/bash
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    ssh_authorized_keys:
+      - ${ssh_public_key}
+package_update: true
+packages:
+  - qemu-guest-agent
+  - netcat-openbsd
+  - nmap
+  - tcpdump
+  - curl
+  - apache2-utils
+runcmd:
+  - systemctl enable --now qemu-guest-agent

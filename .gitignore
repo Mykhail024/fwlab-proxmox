@@ -1,0 +1,12 @@
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+tfplan
+crash.log
+
+
+terraform.tfvars
+id_ed25519
+id_ed25519.pub
+*.pem
